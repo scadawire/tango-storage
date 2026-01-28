@@ -116,7 +116,7 @@ class Storage(Device, metaclass=DeviceMeta):
 
     def save_state(self):
         state = {
-            "values": self.dynamicAttributes[name],
+            "values": self.dynamicAttributes,
         }
         with open(self.STATE_FILE, "w") as f:
             json.dump(state, f)
