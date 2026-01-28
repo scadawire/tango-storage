@@ -10,6 +10,7 @@ import sys,time,datetime,traceback,os
 
 class Storage(Device, metaclass=DeviceMeta):
 
+    STATE_FILE = "storage_state.json"
     init_dynamic_attributes = device_property(dtype=str, default_value="")
     dynamicAttributes = {}
     dynamicAttributeValueTypes = {}
@@ -33,6 +34,7 @@ class Storage(Device, metaclass=DeviceMeta):
                 for attribute in attributes:
                     self.info_stream("Init dynamic attribute: " + str(attribute.strip()))
                     self.add_dynamic_attribute(attribute.strip())
+        self.load_state()
         self.set_state(DevState.ON)
 
     def add_dynamic_attribute(self, topic,
