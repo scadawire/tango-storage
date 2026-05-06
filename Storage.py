@@ -59,7 +59,7 @@ class Storage(Device, metaclass=DeviceMeta):
         attr.set_default_properties(prop)
         self.add_attribute(attr, r_meth=self.read_dynamic_attr, w_meth=self.write_dynamic_attr)
         self.dynamicAttributes[topic] = ""
-        self.set_change_event(topic, True, True)
+        self.set_change_event(topic, True, False)
 
     def stringValueToVarType(self, variable_type_name) -> CmdArgType:
         if(variable_type_name == "DevBoolean"):
