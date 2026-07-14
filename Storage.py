@@ -32,7 +32,7 @@ class Storage(Device, metaclass=DeviceMeta):
             except JSONDecodeError as e:
                 attributes = self.init_dynamic_attributes.split(",")
                 for attribute in attributes:
-                    self.info_stream("Init dynamic attribute: " + str(attribute.strip()))
+                    self.info_stream("Init dynamic attribute: %s", str(attribute.strip()))
                     self.add_dynamic_attribute(attribute.strip())
         self.load_state()
         self.set_state(DevState.ON)
@@ -41,7 +41,7 @@ class Storage(Device, metaclass=DeviceMeta):
             variable_type_name="DevString", min_value="", max_value="",
             unit="", write_type_name="", label="", modifier="",
             min_alarm="", max_alarm="", min_warning="", max_warning=""):
-        self.info_stream(f"Adding dynamic attribute : {topic}")
+        self.info_stream("Adding dynamic attribute: %s", topic)
         if topic == "": return
         prop = UserDefaultAttrProp()
         variableType = self.stringValueToVarType(variable_type_name)
@@ -107,13 +107,13 @@ class Storage(Device, metaclass=DeviceMeta):
     def read_dynamic_attr(self, attr):
         name = attr.get_name()
         value = self.dynamicAttributes[name]
-        self.debug_stream("read value " + str(name) + ": " + str(value))
+        self.debug_stream("read value %s: %s", name, value)
         attr.set_value(self.stringValueToTypeValue(name, value))
 
     def write_dynamic_attr(self, attr):
         value = str(attr.get_write_value())
         name = attr.get_name()
-        self.debug_stream("write value " + str(name) + ": " + str(value))
+        self.debug_stream("write value %s: %s", name, value)
         self.dynamicAttributes[name] = value
         self.save_state()
         self.push_change_event(name, self.stringValueToTypeValue(name, value))
