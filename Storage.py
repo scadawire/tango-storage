@@ -74,7 +74,7 @@ class Storage(Device, metaclass=DeviceMeta):
             return CmdArgType.DevString
         if(variable_type_name == ""):
             return CmdArgType.DevString
-        raise Exception("given variable_type '" + variable_type + "' unsupported, supported are: DevBoolean, DevLong, DevDouble, DevFloat, DevString")
+        raise Exception("given variable_type '" + variable_type_name + "' unsupported, supported are: DevBoolean, DevLong, DevDouble, DevFloat, DevString")
 
     def stringValueToWriteType(self, write_type_name) -> AttrWriteType:
         if(write_type_name == "READ"):
