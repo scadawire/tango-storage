@@ -246,6 +246,26 @@ def test_read_serves_cached_value():
     s.cleanup()
 
 
+def test_unwritten_attribute_reads_as_its_type():
+    """An attribute that was never written holds no text yet, and reading it has to answer a value of
+    its type: float("") ends the read with a conversion error, and the client asking only sees the read
+    fail. The lqr controller of demo026 read its actor attribute before it ever wrote it, and so it
+    never regulated at all."""
+    print("\n-- an attribute that was never written --")
+    s = State()
+    register(s, "b", "DevBoolean")
+    register(s, "l", "DevLong")
+    register(s, "d", "DevDouble")
+    register(s, "f", "DevFloat")
+    register(s, "st", "DevString")
+    assert_false("boolean answers false", Storage.stringValueToTypeValue(s, "b", ""))
+    assert_equal("long answers zero", Storage.stringValueToTypeValue(s, "l", ""), 0)
+    assert_equal("double answers zero", Storage.stringValueToTypeValue(s, "d", ""), 0.0, tolerance=1e-9)
+    assert_equal("float answers zero", Storage.stringValueToTypeValue(s, "f", ""), 0.0, tolerance=1e-9)
+    assert_equal("string stays empty", Storage.stringValueToTypeValue(s, "st", ""), "")
+    s.cleanup()
+
+
 # ===========================================================================
 #  State persistence
 # ===========================================================================
@@ -307,6 +327,7 @@ def main():
         test_roundtrip_each_type()
         test_write_pushes_typed_event()
         test_read_serves_cached_value()
+        test_unwritten_attribute_reads_as_its_type()
         test_save_and_load_state()
         test_load_state_missing_file()
         test_load_state_corrupt_file()

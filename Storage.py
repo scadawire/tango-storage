@@ -95,14 +95,21 @@ class Storage(Device, metaclass=DeviceMeta):
                 return False
             if(str(val).lower() == "true"):
                 return True
-            return bool(int(float(val)))
+            return bool(int(self.stringValueToFloat(val)))
         if(self.dynamicAttributeValueTypes[name] == CmdArgType.DevLong):
-            return int(float(val))
+            return int(self.stringValueToFloat(val))
         if(self.dynamicAttributeValueTypes[name] == CmdArgType.DevDouble):
-            return float(val)
+            return self.stringValueToFloat(val)
         if(self.dynamicAttributeValueTypes[name] == CmdArgType.DevFloat):
-            return float(val)
+            return self.stringValueToFloat(val)
         return val
+
+    # an attribute that was never written holds no text yet, and reading it has to answer a value of its
+    # type rather than end in a conversion error: a client only sees the read fail, not why. That is what
+    # kept the lqr controller of demo026 from regulating - it reads its actor attribute before it writes
+    # it for the first time, and never got past that read.
+    def stringValueToFloat(self, val):
+        return float(val) if val not in ('', None) else 0.0
 
     def read_dynamic_attr(self, attr):
         name = attr.get_name()
