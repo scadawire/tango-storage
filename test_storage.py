@@ -168,7 +168,9 @@ def test_string_value_to_write_type():
     assert_equal("READ", Storage.stringValueToWriteType(s, "READ"), AttrWriteType.READ)
     assert_equal("WRITE", Storage.stringValueToWriteType(s, "WRITE"), AttrWriteType.WRITE)
     assert_equal("READ_WRITE", Storage.stringValueToWriteType(s, "READ_WRITE"), AttrWriteType.READ_WRITE)
-    assert_equal("READ_WITH_WRITE", Storage.stringValueToWriteType(s, "READ_WITH_WRITE"), AttrWriteType.READ_WITH_WRITE)
+    # not offered: tango needs an associated write attribute for it, which no driver defines
+    assert_raises("READ_WITH_WRITE rejected",
+                  lambda: Storage.stringValueToWriteType(s, "READ_WITH_WRITE"))
     assert_equal("empty defaults to READ_WRITE", Storage.stringValueToWriteType(s, ""), AttrWriteType.READ_WRITE)
     assert_raises("unsupported write type raises",
                   lambda: Storage.stringValueToWriteType(s, "SOMETHING"))
